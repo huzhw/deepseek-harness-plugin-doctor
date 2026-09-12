@@ -1,6 +1,6 @@
 ---
 name: deepseek-harness-plugin-doctor
-description: DeepSeek Harness（DSH）插件与升级体检医生：dsh 起不来、页面白屏/Failed to load plugins、插件加载崩溃、app/引擎/插件升级后兼容问题的一站式诊断与修复。内置插件台账（web profile 26 依赖三分类）、三大已知病速查（pnpm store 漂移、client bundle externals 漂移、插件缺失重装）、版本三层结构（桌面app/引擎/插件）、引擎升级后必检清单、浏览器实测验证法（健康检查会假阳性）。触发词：dsh起不来、dsh起不来了、插件修复、dsh插件、dsh体检、dsh检查、dsh升级、引擎升级、dsh doctor、plugin doctor、missed the module table、ERR_PNPM_UNEXPECTED_STORE、Failed to load plugins、插件台账、升级体检。
+description: DeepSeek Harness（DSH）插件与升级体检医生：dsh 起不来、页面白屏/Failed to load plugins、插件加载崩溃、app/引擎/插件升级后兼容问题的一站式诊断与修复。内置插件台账、三大已知病速查（pnpm store 漂移、client bundle externals 漂移、插件缺失重装）、版本三层结构（桌面app/引擎/插件）、引擎升级后必检清单、浏览器实测验证法（健康检查会假阳性）。另含：插件全量盘点与升级代办（npm dist-tags + git commit 比对法）、插件安全审计（出站声明法，安全≠成熟分开报）、市场插件成熟度分组与替代品调研（awesome-dsh-plugin 注册表 star 榜 + 量纲陷阱）、插件精简卸载（取证四件套）。触发词：dsh起不来、dsh起不来了、插件修复、dsh插件、dsh体检、dsh检查、dsh升级、引擎升级、dsh doctor、plugin doctor、missed the module table、ERR_PNPM_UNEXPECTED_STORE、Failed to load plugins、插件台账、升级体检、插件盘点、插件精简、卸载插件、插件替代、这插件安全吗、插件star。
 author: 胡志伟
 motto: "健康检查会说谎，浏览器不会——插件的事，眼见为实。"
 ---
@@ -65,6 +65,22 @@ DeepSeek Harness（DSH）的插件与升级体检医生。dsh 起不来、页面
 - **症状**：desktop.log `INTERNAL_PLUGIN_NEEDS_REINSTALL: <名字>（dep_ok=false, link_ok=false, expected=link:...）`
 - **修法**：内部预设（dsh-tauri\*）app 启动自动补装（源头 `D:\tools\Deepseek Harness Desktop\resources\node_modules`），病1修好后它就能自己装好；市场插件走 dshmarket 重装；成功标志查 desktop.log `Preinstall plugins installed successfully`
 
+## 插件全量盘点与升级代办（用户说"盘点插件 / 帮我升级"时走这节）
+
+1. **盘点**：读 `profiles\web\package.json` dependencies → 逐条比对 `node_modules\<pkg>\package.json` 实装版本 vs `npm view <pkg> dist-tags`（加 `--registry=https://mirrors.cloud.tencent.com/npm/`）；git 源走第 3 条
+2. **引擎**：`npm view @deepseek-ai/dsh-web-app dist-tags` 认 **next**；再拉 `versions` 全列确认没有更高版（latest 是占位假标签）
+3. **git 源插件**：`git ls-remote --tags --refs <url>` 可直连 GitHub（shell 走 policy proxy 放行）。**版本判定以 lockfile 锁的 commit 对比远端 HEAD 为准，package.json 的 version 字段会骗人**（先例：win-terminal-inspector 作者打 tag 不 bump version，"1.0.0 vs v1.0.1"是假差异）
+4. **app**：官方推送通道；GitHub `releases.atom` 直连解析异常、ghproxy 对 atom 403（对 raw 文件通）——查不了远端就明说，别编
+5. **升级姿势**：`pnpm -C <profile> update <pkg>` 后必跑 `install --frozen-lockfile` 验证一致性 + 对改动插件跑病2扫描（内置模块 `require(` 计数）；输出 `Packages: -N` 是 prune 不是损坏，frozen 会按 lockfile 重建
+6. **PS5.1 坑**：读 package.json 版本用正则 `"version"\s*:\s*"([^"]+)"`，别用 ConvertFrom-Json——含中文描述/特殊字符必炸，且失败时变量残留上轮值造成串行错版
+
+## 插件安全审计法（用户问"这插件安全吗"时走这节）
+
+1. **出站声明**：package.json 的 network permissions 计数 + dependencies/peerDependencies 构成
+2. **判定口径**：0 出站声明 + 依赖全本地库（yaml/zod/chokidar 等）或 @deepseek-ai 官方件 = 可信
+3. **安全性（审计通过）≠ 成熟度（版本线+补丁史），两个维度分开报，别混**（教训：permission-rules 是权限门禁核心，但 0.x + 手工垫片史 = 不成熟，分组成熟度时必须归观察块）
+4. **实证记录有价值**：dsh-defend 2026-09-13 实证拦截过一次工具结果 secret 外泄（generic-assignment 规则），审计时引实证
+
 ## 升级后必检清单（app / 引擎 / 插件任一升级后跑一遍）
 
 - [ ] desktop.log 有 `Preinstall plugins installed successfully`（内部预设补装完成）
@@ -73,6 +89,29 @@ DeepSeek Harness（DSH）的插件与升级体检医生。dsh 起不来、页面
 - [ ] 换机器/挪盘后 store 对齐（病1 检查法）
 - [ ] 版本三层各自到哪了（`npm view ... next/latest` vs 本机）
 
+## 市场插件调研（用途/配置/成熟度分组/替代品/star，"列一下插件都是干啥的 / 有没有更好替代"时走这节）
+
+1. **用途**：读各插件 package.json 的 `description` / `dshhub.summary`；PS 直读中文可能乱码——用正则抓或看 npm stderr 里的原始 JSON
+2. **配置归属**（~/.dsh 根文件实查）：`rules.yaml`=permission-rules（**热重载改完即生效**，`/rules list` 查生效规则）、`pet.json`=dsh-tauri-pet、`storages\cost-meter\`=费用账本、`settings.yaml`=LLM 供应商（settings-curator 管）、`dream-skin.json`+`skin-center-active.json`=内置皮肤中心（非插件）；通用规律：**web-ui 插件→「设置→插件」面板，host-only→纯后台或专属文件**
+3. **成熟度分块判据**：✅稳定=1.0+ 正式版本线 + 无手改史；🧪观察=0.x / git 源 / 有垫片史 / 依赖上游存亡。**观察≠不安全≠别用**，是"升级必看 changelog"；DSH 生态整体年轻（引擎才 0.1.5-rc），0.x 是常态
+4. **替代品调研标准流程**：
+   - `curl.exe -sS --max-time 280 -o $env:TEMP\awesome-plugins.json https://awesome-dsh-plugin.com/plugins.json`（约 3.2MB，90s 不够下完）
+   - **必须用 node -e 解析**（PS5.1 ConvertFrom-Json 对大 JSON/中文字符必炸）
+   - 按 category（security/usage/ui/memory/vision/docs/dev/session…）列 top 星竞品，与本机插件逐个对比
+   - **star 量纲陷阱**：套件子包的星数是整个仓库的（dsh-web ★7131、archify ★53k、hindsight ★23k 都是主项目数，别当插件本体星）；**细分第一星低≠不成熟**（defend ★7 是注入拦截唯一，无同类竞品）
+   - **同名仿品警示**：dsh-cost-meter 有 ★0/★2 仿品、better-sidebar 有 -N23 仿品——安装/核对认准 owner
+5. **官方口径**：deepseek-ai **没有官方市场，也没指定任何市场**（官方只有 `dsh plugin add` CLI + Settings→Plugins 官方面板）；dshmarket=社区事实标准（app 出厂内置 + awesome-dsh-plugin 注册表唯一 Recommended，两者互为数据源）
+
+## 插件精简/卸载（用户说"去掉不需要的"时走这节）
+
+**取证四件套，全查完再定卸载清单**（凭印象必翻车）：
+1. **配置实锤**：grep settings.yaml 是否真在用（例：dsh-opencode-session 靠 33 处 OpenCode 配置保命，看着像闲置实则在岗）
+2. **官方能力覆盖**：desktop.log 是否已自带同能力（例：win-terminal-inspector vs 官方日志 "provides the official Windows process inspector"）
+3. **活动痕迹**：dsh-web.log 有无该插件动静
+4. **依赖方**：awesome-dsh-plugin 注册表收录情况 + 有没有其他插件依赖它（dsh-better-sidebar 被第三方注册页签，不能动）
+
+**执行**：备份 package.json+pnpm-lock.yaml 到 `.bak\`（rN 序号递增）→ `pnpm -C <profile> remove <pkg>` → 验证（目录消失、deps 计数 28→27 这类、`install --frozen-lockfile` 秒过）→ **汇报必须附回滚命令** → 台账同步记账（另出确认词），防下次体检账实不符
+
 ## 红线与经验
 
 - **杀 dsh 进程通常被拒（高权限）而且通常不需要**——client bundle 补丁即改即生效，刷新页面就行
@@ -80,6 +119,10 @@ DeepSeek Harness（DSH）的插件与升级体检医生。dsh 起不来、页面
 - `@deepseek-ai/dsh-base`、`@deepseek-ai/dsh-web-app` 两条 `CORE_PLUGIN_PROFILE_ENTRY_MISSING` 是长期 WARN，不拦启动，别当病治
 - `[pet-stream]` 2 秒重连刷屏是宠物插件常驻重连，与起不来无关
 - 改任何文件前：备份到 `<profile>\.bak\`，方案带四字成语确认词
+- **读含 token/bearer 的日志先脱敏**：`-replace '(token[=:])\S+','$1***'`——否则 dsh-defend 按规则拦（generic-assignment），直接 tail 必被拒
+- **chrome-devtools MCP 报 `Target setDiscoverTargets: Target closed`** = 它管理的浏览器实例没了（Chrome 装在用户级 %LOCALAPPDATA% 目录）——重启桌面 app 让 MCP 重拉；没有浏览器实测条件时，用"本会话即 13080 页面"活体证据 + 病2 bundle 主动巡检（全插件 `require("内置模块")` 计数=0）替代
+- **grep/glob 递归扫 `~\.dsh` 会撞 `profiles\node_modules` 断链 junction**（react/immer/clsx 等旧结构遗留）报错一片——走精确文件路径，别递归扫 profile 根
+- **台账/skill 改前备份序号惯例**：`.bak\<文件名>.bak-YYYYMMDD-rN`（r1、r2 递增），回滚全靠它；profile 三件套（package.json/pnpm-lock.yaml/cordis.patch.yml）动前必备
 
 ## 相关技能
 
