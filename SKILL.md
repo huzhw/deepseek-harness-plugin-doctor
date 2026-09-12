@@ -25,7 +25,7 @@ DeepSeek Harness（DSH）的插件与升级体检医生。dsh 起不来、页面
 
 1. **后端活着吗**：`netstat -ano | findstr 13080`，有 LISTENING + pid 即活着
 2. **HTTP 通吗**：`xh GET http://127.0.0.1:13080/`，返回 HTML 即通
-3. **浏览器实测（关键步骤）**：chrome-devtools 打开 `http://127.0.0.1:13080/?token=<token>` → 截图 + console
+3. **浏览器实测（关键步骤）**：用 dsh-builtin-browser 插件的 `browser_*` 工具打开 `http://127.0.0.1:13080/?token=<token>` → 截图 + console（**2026-09-12 起 DSH 已弃用 chrome-devtools MCP**；在 CC/Codex/ZCode 端做此体检才用它们的 chrome-devtools MCP）
    - token 从 `%APPDATA%\io.github.hairyf.deepseek-harness-desktop\logs\dsh-web.log` 最后一行拿（每次启动轮换）
    - **健康检查 74/74 通过 ≠ UI 正常**（假阳性实锤过），一切以浏览器截图和 console 为准
 4. **日志定位**（都在 `%APPDATA%\io.github.hairyf.deepseek-harness-desktop\logs\`）：
@@ -120,7 +120,7 @@ DeepSeek Harness（DSH）的插件与升级体检医生。dsh 起不来、页面
 - `[pet-stream]` 2 秒重连刷屏是宠物插件常驻重连，与起不来无关
 - 改任何文件前：备份到 `<profile>\.bak\`，方案带四字成语确认词
 - **读含 token/bearer 的日志先脱敏**：`-replace '(token[=:])\S+','$1***'`——否则 dsh-defend 按规则拦（generic-assignment），直接 tail 必被拒
-- **chrome-devtools MCP 报 `Target setDiscoverTargets: Target closed`** = 它管理的浏览器实例没了（Chrome 装在用户级 %LOCALAPPDATA% 目录）——重启桌面 app 让 MCP 重拉；没有浏览器实测条件时，用"本会话即 13080 页面"活体证据 + 病2 bundle 主动巡检（全插件 `require("内置模块")` 计数=0）替代
+- **chrome-devtools MCP `Target closed` 终局结论（2026-09-12，DSH 已退役该 MCP 改用 dsh-builtin-browser 插件）**：根因三层 = 引擎 0.12.2 stdio 裸 spawn `npx` ENOENT + 四端共用 Edge profile 单例互顶 + **引擎子进程环境里 puppeteer 带管道句柄的浏览器孵化无声失败**（普通 spawn 正常、事件日志无崩溃、profile 目录零写入；"重启让 MCP 重拉"旧假设已证伪）。CC/Codex/ZCode 端仍用 chrome-devtools MCP（各占独立 `User Data MCP-<端名>` 目录）；排障证据链存 `~\.dsh\.bak\`（cdm-edge-probe.log 探针 / cdm-env-safe.txt 安全环境子集）；没有浏览器实测条件时，用"本会话即 13080 页面"活体证据 + 病2 bundle 主动巡检（全插件 `require("内置模块")` 计数=0）替代
 - **grep/glob 递归扫 `~\.dsh` 会撞 `profiles\node_modules` 断链 junction**（react/immer/clsx 等旧结构遗留）报错一片——走精确文件路径，别递归扫 profile 根
 - **台账/skill 改前备份序号惯例**：`.bak\<文件名>.bak-YYYYMMDD-rN`（r1、r2 递增），回滚全靠它；profile 三件套（package.json/pnpm-lock.yaml/cordis.patch.yml）动前必备
 
