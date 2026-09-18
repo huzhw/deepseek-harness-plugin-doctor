@@ -10,6 +10,7 @@
 | DSH | `C:\Users\Administrator\.dsh\skills\deepseek-harness-plugin-doctor` | 同上 |
 | Codex | `C:\Users\Administrator\.codex\skills\deepseek-harness-plugin-doctor` | 同上 |
 | ZCode | `C:\Users\Administrator\.zcode\skills\deepseek-harness-plugin-doctor` | 同上 |
+| 全局路径（junction，Qoder） | `C:\Users\Administrator\.qoder\skills\deepseek-harness-plugin-doctor` |
 
 ## 双向同步说明
 
@@ -24,6 +25,7 @@ dir "C:\Users\Administrator\.claude\skills" | findstr deepseek-harness-plugin-do
 dir "C:\Users\Administrator\.dsh\skills" | findstr deepseek-harness-plugin-doctor
 dir "C:\Users\Administrator\.codex\skills" | findstr deepseek-harness-plugin-doctor
 dir "C:\Users\Administrator\.zcode\skills" | findstr deepseek-harness-plugin-doctor
+cmd /c dir "C:\Users\Administrator\.qoder\skills" | findstr deepseek-harness-plugin-doctor
 ```
 
 看到 `<JUNCTION>` 字样即完好；看到 `<DIR>` 说明变成了实体目录（断链后被落了文件），需人工处理。
@@ -32,6 +34,10 @@ dir "C:\Users\Administrator\.zcode\skills" | findstr deepseek-harness-plugin-doc
 
 ```bat
 rd "C:\Users\Administrator\.claude\skills\deepseek-harness-plugin-doctor"
+rd "C:\Users\Administrator\.dsh\skills\deepseek-harness-plugin-doctor"
+rd "C:\Users\Administrator\.codex\skills\deepseek-harness-plugin-doctor"
+rd "C:\Users\Administrator\.zcode\skills\deepseek-harness-plugin-doctor"
+rd "C:\Users\Administrator\.qoder\skills\deepseek-harness-plugin-doctor"
 ```
 
 **`rd` 后面绝对不能加 `/s`**：不加 `/s` 只删 Junction 链接本身，F 盘真身安然无恙；加 `/s` 会顺着链接把 F 盘真身内容一并删掉。
