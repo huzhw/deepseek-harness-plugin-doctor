@@ -92,7 +92,7 @@ DeepSeek Harness（DSH）的插件与升级体检医生。dsh 起不来、页面
 ## 市场插件调研（用途/配置/成熟度分组/替代品/star，"列一下插件都是干啥的 / 有没有更好替代"时走这节）
 
 1. **用途**：读各插件 package.json 的 `description` / `dshhub.summary`；PS 直读中文可能乱码——用正则抓或看 npm stderr 里的原始 JSON
-2. **配置归属**（~/.dsh 根文件实查）：`rules.yaml`=permission-rules（**热重载改完即生效**，`/rules list` 查生效规则）、`pet.json`=dsh-tauri-pet、`storages\cost-meter\`=费用账本、`settings.yaml`=LLM 供应商（settings-curator 管）、`dream-skin.json`+`skin-center-active.json`=内置皮肤中心（非插件）；通用规律：**web-ui 插件→「设置→插件」面板，host-only→纯后台或专属文件**
+2. **配置归属**（~/.dsh 根文件实查）：`rules.yaml`=permission-rules（**热重载改完即生效**，`/rules list` 查生效规则）、`pet.json`=dsh-tauri-pet、`storages\cost-meter\`=费用账本、`profiles\<profile>\cordis.patch.yml`=LLM 供应商与权限预设（settings-curator 管；**2026-09-23 起配置真源，旧 `settings.yaml` 已退役、只剩 `.imported`**）、`dream-skin.json`+`skin-center-active.json`=内置皮肤中心（非插件）；通用规律：**web-ui 插件→「设置→插件」面板，host-only→纯后台或专属文件**
 3. **成熟度分块判据**：✅稳定=1.0+ 正式版本线 + 无手改史；🧪观察=0.x / git 源 / 有垫片史 / 依赖上游存亡。**观察≠不安全≠别用**，是"升级必看 changelog"；DSH 生态整体年轻（引擎才 0.1.5-rc），0.x 是常态
 4. **替代品调研标准流程**：
    - `curl.exe -sS --max-time 280 -o $env:TEMP\awesome-plugins.json https://awesome-dsh-plugin.com/plugins.json`（约 3.2MB，90s 不够下完）
@@ -105,7 +105,7 @@ DeepSeek Harness（DSH）的插件与升级体检医生。dsh 起不来、页面
 ## 插件精简/卸载（用户说"去掉不需要的"时走这节）
 
 **取证四件套，全查完再定卸载清单**（凭印象必翻车）：
-1. **配置实锤**：grep settings.yaml 是否真在用（例：dsh-opencode-session 靠 33 处 OpenCode 配置保命，看着像闲置实则在岗）
+1. **配置实锤**：grep `profiles\<profile>\cordis.patch.yml`（2026-09-23 前是 `settings.yaml`）是否真在用（例：dsh-opencode-session 靠 33 处 OpenCode 配置保命，看着像闲置实则在岗）
 2. **官方能力覆盖**：desktop.log 是否已自带同能力（例：win-terminal-inspector vs 官方日志 "provides the official Windows process inspector"）
 3. **活动痕迹**：dsh-web.log 有无该插件动静
 4. **依赖方**：awesome-dsh-plugin 注册表收录情况 + 有没有其他插件依赖它（dsh-better-sidebar 被第三方注册页签，不能动）
@@ -126,5 +126,5 @@ DeepSeek Harness（DSH）的插件与升级体检医生。dsh 起不来、页面
 
 ## 相关技能
 
-- [deepseek-harness-settings-curator](https://github.com/huzhw/deepseek-harness-settings-curator)：DSH settings.yaml 模型配置梳理
+- [deepseek-harness-settings-curator](https://github.com/huzhw/deepseek-harness-settings-curator)：DSH 模型配置梳理（真源 profile 补丁 cordis.patch.yml）
 - [agent-config-sync-check](https://github.com/huzhw/agent-config-sync-check)：四端同步守卫
