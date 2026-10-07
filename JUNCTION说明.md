@@ -1,8 +1,8 @@
 # Junction 说明
 
-本仓库（`F:\idea-workspase-skills\deepseek-harness-plugin-doctor`）是唯一数据源，四个工具端通过 Windows Junction 链接消费，**四端看到的永远是同一份文件**。
+本仓库（`F:\idea-workspase-skills\deepseek-harness-plugin-doctor`）是唯一数据源，五个工具端通过 Windows Junction 链接消费，**五端看到的永远是同一份文件**。
 
-## 四端指向关系
+## 五端指向关系
 
 | 端 | Junction（链接） | 目标（真身） |
 |---|---|---|
@@ -15,7 +15,7 @@
 ## 双向同步说明
 
 - **改文件只在 F 盘真身改**（或从任一端进入后沿 Junction 落到 F 盘，效果等同）
-- 四端没有"各自副本"，不存在内容分叉；分叉只可能发生在 Junction 断链后某端落了实体文件
+- 五端没有"各自副本"，不存在内容分叉；分叉只可能发生在 Junction 断链后某端落了实体文件
 - 定期体检：`pwsh -NoProfile -File "F:\idea-workspase-skills\agent-config-sync-check\scripts\sync-check.ps1"`（修复加 `-Fix`）
 
 ## 检查 Junction 是否完好
