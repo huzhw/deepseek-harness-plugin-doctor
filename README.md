@@ -6,7 +6,7 @@ dsh 起不来、插件加载崩溃、升级后犯病的一站式诊断修复：�
 
 ## 相关技能
 
-- [agent-config-sync-check](https://github.com/huzhw/agent-config-sync-check)：六端同步守卫：链接/硬链接/README 同步检查与修复
+- [agent-config-sync-check](https://github.com/huzhw/agent-config-sync-check)：七端同步守卫：链接/硬链接/README 同步检查与修复
 - [git-commit](https://github.com/huzhw/git-commit-skill)：Git 提交规范
 - [daily-record-gitlab-md](https://github.com/huzhw/daily-record-gitlab-md-skill)：日报记录
 - [daily-merge-gitlab-excel](https://github.com/huzhw/daily-merge-gitlab-excel-skill)：日报合并
