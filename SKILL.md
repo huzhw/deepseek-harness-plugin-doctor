@@ -127,4 +127,4 @@ DeepSeek Harness（DSH）的插件与升级体检医生。dsh 起不来、页面
 ## 相关技能
 
 - [deepseek-harness-settings-curator](https://github.com/huzhw/deepseek-harness-settings-curator)：DSH 模型配置梳理（真源 profile 补丁 cordis.patch.yml）
-- [agent-config-sync-check](https://github.com/huzhw/agent-config-sync-check)：五端同步守卫
+- [agent-config-sync-check](https://github.com/huzhw/agent-config-sync-check)：六端同步守卫
