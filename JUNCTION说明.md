@@ -1,8 +1,8 @@
 # Junction 说明
 
-本仓库（`F:\idea-workspase-skills\deepseek-harness-plugin-doctor`）是唯一数据源，五个工具端通过 Windows Junction 链接消费（CodeBuddy 经 `.claude` 复用），**六端看到的永远是同一份文件**。
+本仓库（`F:\idea-workspase-skills\deepseek-harness-plugin-doctor`）是唯一数据源，五个工具端通过 Windows Junction 链接消费，**五端看到的永远是同一份文件**。
 
-## 指向关系（五端 Junction + CodeBuddy 复用 .claude）
+## 指向关系（五端 Junction）
 
 | 端 | Junction（链接） | 目标（真身） |
 |---|---|---|
